@@ -1,11 +1,19 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Duke {
+    private static final String FILE_PATH = "./data/duke.csv";
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         List<Task> taskList = new ArrayList<>();
+        TaskListHandler.loadTaskList(taskList);
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
                 + "| | | | | | | |/ / _ \\\n"
@@ -46,6 +54,7 @@ public class Duke {
             else if (tokenized[0].equals("todo") && tokenized.length > 1) {
                 taskList.add(new TodoTask(tokenized[1]));
                 taskList.get(taskList.size() - 1).printTaskInfo(taskList);
+                TaskListHandler.saveTaskList(taskList);
             }
 
             // deadline <string> /by <string>
@@ -53,6 +62,7 @@ public class Duke {
                 String[] deadlineInfo = tokenized[1].split("\\s*/by\\s*", 2);
                 taskList.add(new DeadlineTask(deadlineInfo[0], deadlineInfo[1].trim()));
                 taskList.get(taskList.size() - 1).printTaskInfo(taskList);
+                TaskListHandler.saveTaskList(taskList);
             }
 
             // event <string> /from <string> /to <string>
@@ -61,6 +71,7 @@ public class Duke {
                 String[] timeInfo = eventInfo[1].split("\\s*/to\\s*", 2);
                 taskList.add(new EventTask(eventInfo[0], timeInfo[0].trim(), timeInfo[1].trim()));
                 taskList.get(taskList.size() - 1).printTaskInfo(taskList);
+                TaskListHandler.saveTaskList(taskList);
             }
 
             // mark <int>
@@ -72,6 +83,7 @@ public class Duke {
                 System.out.println("Nice! I've marked this task as done:");
                 System.out.println("[" + taskType + "][X] " + taskList.get(markDone).getDescription());
                 System.out.println("____________________________________________________________");
+                TaskListHandler.saveTaskList(taskList);
             }
 
             // unmark <int>
@@ -83,6 +95,7 @@ public class Duke {
                 System.out.println("OK, I've marked this task as not done yet:");
                 System.out.println("[" + taskType + "][ ] " + taskList.get(markUndone).getDescription());
                 System.out.println("____________________________________________________________");
+                TaskListHandler.saveTaskList(taskList);
             }
 
             // delete <int>
@@ -94,6 +107,7 @@ public class Duke {
                 System.out.println("[" + removedTask.getType() + "][" + removedTask.getStatusIcon() + "] " + removedTask.getDescription());
                 System.out.println("Now you have " + taskList.size() + " tasks in the list.");
                 System.out.println("____________________________________________________________");
+                TaskListHandler.saveTaskList(taskList);
             }
 
             else if (tokenized[0].equals("help")) {
