@@ -7,13 +7,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class TaskListHandler {
     private static final String FILE_PATH = "./data/duke.csv";
 
     public static void saveTaskList(List<Task> taskList) {
-        createNewDirectory(FILE_PATH);
+        createNewDirectory();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Task task : taskList) {
@@ -26,7 +28,7 @@ public class TaskListHandler {
     }
 
     public static void loadTaskList(List<Task> taskList) {
-        createNewDirectory(FILE_PATH);
+        createNewDirectory();
 
         File file = new File(FILE_PATH);
         if (!file.exists()) {
@@ -49,31 +51,34 @@ public class TaskListHandler {
 
     private static Task createTaskFromSaveFormat(String line) {
         Task task = null;
-        String[] parts = line.split(" \\| ");
-        if (parts.length < 3) {
+        String[] tokenized = line.split(" \\| ");
+        if (tokenized.length < 3) {
             // Invalid format, cannot create task
             return null;
         }
 
-        String taskType = parts[0].trim();
-        boolean isDone = parts[1].trim().equals("1");
-        String description = parts[2].trim();
+        String taskType = tokenized[0].trim();
+        boolean isDone = tokenized[1].trim().equals("1");
+        String description = tokenized[2].trim();
 
         switch (taskType) {
             case "T":
                 task = new TodoTask(description);
                 break;
             case "D":
-                if (parts.length >= 4) {
-                    String by = parts[3].trim();
-                    task = new DeadlineTask(description, by);
+                if (tokenized.length >= 4) {
+                    String by = tokenized[3].trim();
+                    LocalDate byDate = LocalDate.parse(by, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    task = new DeadlineTask(description, byDate);
                 }
                 break;
             case "E":
-                if (parts.length >= 4) {
-                    String from = parts[3].trim();
-                    String to = parts[4].trim();
-                    task = new EventTask(description, from, to);
+                if (tokenized.length >= 5) {
+                    String from = tokenized[3].trim();
+                    String to = tokenized[4].trim();
+                    LocalDate fromDate = LocalDate.parse(from, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    LocalDate toDate = LocalDate.parse(to, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    task = new EventTask(description, fromDate, toDate);
                 }
                 break;
             default:
@@ -92,8 +97,8 @@ public class TaskListHandler {
         return task;
     }
 
-    private static void createNewDirectory(String filePath) {
-        Path path = Paths.get(filePath).getParent();
+    private static void createNewDirectory() {
+        Path path = Paths.get(TaskListHandler.FILE_PATH).getParent();
         if (path != null && !Files.exists(path)) {
             try {
                 Files.createDirectories(path);

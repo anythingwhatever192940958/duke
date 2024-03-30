@@ -1,18 +1,30 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class EventTask extends Task {
-    public EventTask(String description, String from, String to) {
-        super("E", description + " (from: " + from + " to: " + to + ")");
+    private LocalDate fromDate;
+    private LocalDate toDate;
+
+    public EventTask(String description, LocalDate fromDate, LocalDate toDate) {
+        super("E", description);
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+    }
+
+    @Override
+    public String getDescription() {
+        return super.getDescription() + " (from: " + formatDate(fromDate) + " to: " + formatDate(toDate) + ")";
     }
 
     @Override
     public String toSaveFormat() {
-        String[] tokenized = description.split("\\(from: | to: ");
-        if (tokenized.length >= 3) {
-            String desc = tokenized[0].trim();
-            String from = tokenized[1].trim();
-            String to = tokenized[2].substring(0, tokenized[2].length() - 1).trim();
-            return "E | " + (isDone ? "1" : "0") + " | " + desc + " | " + from + " | " + to;
-        } else {
-            return "E | " + (isDone ? "1" : "0") + " | " + description + " | " + "N/A" + " | " + "N/A";
-        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String formattedFromDate = fromDate.format(formatter);
+        String formattedToDate = toDate.format(formatter);
+        return "E | " + (isDone ? "1" : "0") + " | " + description + " | " + formattedFromDate + " | " + formattedToDate;
+    }
+
+    private String formatDate(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
 }
