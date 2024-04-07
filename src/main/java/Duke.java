@@ -68,10 +68,20 @@ public class Duke {
             else if (tokenized[0].equals("event") && tokenized.length > 1 && userInput.contains("/from") && userInput.contains("/to")) {
                 String[] eventInfo = tokenized[1].split("\\s+/from\\s+", 2);
                 String[] timeInfo = eventInfo[1].split("\\s+/to\\s+", 2);
+
+                boolean isOnce = timeInfo[1].contains("/once");
+
+                if (isOnce) {
+                    timeInfo[1] = timeInfo[1].replace("/once", "").trim();
+                }
+
                 LocalDate startDate = LocalDate.parse(timeInfo[0], DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                 LocalDate endDate = LocalDate.parse(timeInfo[1], DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                taskList.add(new EventTask(eventInfo[0], startDate, endDate));
-                taskList.get(taskList.size() - 1).printTaskInfo(taskList);
+
+                EventTask eventTask = new EventTask(eventInfo[0], startDate, endDate, isOnce);
+
+                taskList.add(eventTask);
+                eventTask.printTaskInfo(taskList);
                 TaskListHandler.saveTaskList(taskList);
             }
 
@@ -111,6 +121,24 @@ public class Duke {
                 TaskListHandler.saveTaskList(taskList);
             }
 
+            // find <keyword>
+            else if (tokenized[0].equals("find") && tokenized.length > 1) {
+                String keyword = tokenized[1].toLowerCase();
+                System.out.println("____________________________________________________________");
+                System.out.println("Here are the matching tasks:");
+                int i = 1;
+                for (Task task : taskList) {
+                    if (task.getDescription().toLowerCase().contains(keyword)) {
+                        System.out.println(i + ".[" + task.getType() + "][" + task.getStatusIcon() + "] " + task.getDescription());
+                        i++;
+                    }
+                }
+                if (i == 1) {
+                    System.out.println("No tasks found with the keyword: " + keyword);
+                }
+                System.out.println("____________________________________________________________");
+            }
+
             else if (tokenized[0].equals("help")) {
                 System.out.println("____________________________________________________________");
                 System.out.println("Here is a list of valid commands:");
@@ -122,6 +150,7 @@ public class Duke {
                 System.out.println("mark     - Marks a task as completed");
                 System.out.println("unmark   - Removes a mark from a task");
                 System.out.println("delete   - Deletes a task");
+                System.out.println("find     - Finds tasks with a specific keyword");
                 System.out.println("bye      - Ends the session");
                 System.out.println("____________________________________________________________");
             }

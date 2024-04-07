@@ -27,28 +27,33 @@ class DukeExceptionHandler {
                 throw new DukeException("Deadline description cannot be empty. Please follow the format: deadline <description> /by <date>");
             }
 
-            // Additional check for valid date format
             try {
                 LocalDate.parse(deadlineTokens[1].trim(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             } catch (DateTimeParseException e) {
                 throw new DukeException("Invalid date format. Please use dd-MM-yyyy for the deadline.");
             }
         } else if (tokenized[0].equals("event")) {
-            if (!userInput.matches("^event .+ /from .+ /to .+$")) {
-                throw new DukeException("Please follow the following format: event <description> /from <start date> /to <end date>");
+            if (!userInput.matches("^event .+ /from .+ /to .+( /once)?$")) {
+                throw new DukeException("Please follow the following format: event <description> /from <start date> /to <end date> [/once]");
             }
 
             String[] eventTokens = userInput.split("/from", 2);
             String[] fromTokens = eventTokens[1].split("/to", 2);
+            String endDateString = fromTokens[1].trim();
 
-            if (eventTokens.length <= 1 || eventTokens[0].trim().isEmpty() || fromTokens.length <= 1 || fromTokens[0].trim().isEmpty() || fromTokens[1].trim().isEmpty()) {
-                throw new DukeException("Event description, start date, and end date cannot be empty. Please follow the format: event <description> /from <start date> /to <end date>");
+            boolean isOnce = endDateString.endsWith("/once");
+
+            if (isOnce) {
+                endDateString = endDateString.replace("/once", "").trim();
             }
 
-            // Additional checks for valid date formats
+            if (eventTokens.length <= 1 || eventTokens[0].trim().isEmpty() || fromTokens.length <= 1 || fromTokens[0].trim().isEmpty() || endDateString.isEmpty()) {
+                throw new DukeException("Event description, start date, and end date cannot be empty. Please follow the format: event <description> /from <start date> /to <end date> [/once]");
+            }
+
             try {
                 LocalDate.parse(fromTokens[0].trim(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                LocalDate.parse(fromTokens[1].trim(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                LocalDate.parse(endDateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             } catch (DateTimeParseException e) {
                 throw new DukeException("Invalid date format. Please use dd-MM-yyyy for the event dates.");
             }
@@ -91,7 +96,7 @@ class DukeExceptionHandler {
             } catch (NumberFormatException e) {
                 throw new DukeException("Please enter a number value.");
             }
-        } else if (!tokenized[0].equals("list") && !tokenized[0].equals("help") && !userInput.equals("bye")) {
+        } else if (!tokenized[0].equals("find") && !tokenized[0].equals("list") && !tokenized[0].equals("help") && !userInput.equals("bye")) {
             throw new DukeException("Please enter a valid command.");
         }
     }

@@ -73,12 +73,13 @@ public class TaskListHandler {
                 }
                 break;
             case "E":
-                if (tokenized.length >= 5) {
+                if (tokenized.length >= 6) {
                     String from = tokenized[3].trim();
                     String to = tokenized[4].trim();
+                    boolean isOnce = tokenized[5].trim().equals("once");
                     LocalDate fromDate = LocalDate.parse(from, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                     LocalDate toDate = LocalDate.parse(to, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    task = new EventTask(description, fromDate, toDate);
+                    task = new EventTask(description, fromDate, toDate, isOnce);
                 }
                 break;
             default:
