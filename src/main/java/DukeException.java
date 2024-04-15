@@ -3,12 +3,22 @@ import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Handles exceptions for Duke commands to ensure proper user input format.
+ */
 class DukeException extends Exception {
     public DukeException(String message) {
         super(message);
     }
 }
 
+/**
+ * Handles exceptions for Duke commands based on the user input and the task list.
+ *
+ * @param userInput The user input command.
+ * @param taskList  The list of tasks.
+ * @throws DukeException If the user input does not meet the required format for the command.
+ */
 class DukeExceptionHandler {
     public static void handleExceptions(String userInput, List<Task> taskList) throws DukeException {
         String[] tokenized = userInput.split("\\s+", 2);

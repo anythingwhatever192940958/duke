@@ -5,18 +5,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The main class of the Firefly task management application.
+ * Allows users to interact with the application through a command-line interface.
+ */
 public class Duke {
     private static final String FILE_PATH = "./data/duke.csv";
 
+    /**
+     * The main method of the application.
+     * Creates a Scanner object to read user input and initializes the task list.
+     * Displays the logo and welcomes the user.
+     * Handles user commands and interacts with the TaskListHandler and DukeExceptionHandler classes.
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         List<Task> taskList = new ArrayList<>();
         TaskListHandler.loadTaskList(taskList);
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
+        String logo = "  ______ _           __ _       \n"
+                + " |  ____(_)         / _| |      \n"
+                + " | |__   _ _ __ ___| |_| |_   _ \n"
+                + " |  __| | | '__/ _ \\  _| | | | |\n"
+                + " | |    | | | |  __/ | | | |_| |\n"
+                + " |_|    |_|_|  \\___|_| |_|\\__, |\n"
+                + "                           __/ |\n"
+                + "                          |___/ ";
         System.out.println(logo + "\n");
         System.out.println("____________________________________________________________");
         System.out.println("Hello! I'm Firefly!");

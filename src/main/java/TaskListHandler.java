@@ -11,8 +11,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Utility class for handling the saving and loading of tasks to/from a file.
+ * Manages the conversion of tasks to save format and creation of tasks from save format.
+ */
 public class TaskListHandler {
-    private static final String FILE_PATH = "./data/duke.csv";
+    private static final String FILE_PATH = "./data/firefly.csv";
 
     public static void saveTaskList(List<Task> taskList) {
         createNewDirectory();
