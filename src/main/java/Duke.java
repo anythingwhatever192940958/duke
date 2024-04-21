@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Scanner;
  * Allows users to interact with the application through a command-line interface.
  */
 public class Duke {
-    private static final String FILE_PATH = "./data/duke.csv";
 
     /**
      * The main method of the application.

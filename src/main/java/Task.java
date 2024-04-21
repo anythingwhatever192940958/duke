@@ -22,19 +22,6 @@ public abstract class Task {
     }
 
     /**
-     * Constructs a Task object with the given type, description, and completion status.
-     *
-     * @param type        The type of the task (e.g., "T" for Todo, "D" for Deadline, "E" for Event).
-     * @param description The description of the task.
-     * @param isDone      The completion status of the task (true if completed, false otherwise).
-     */
-    public Task(String type, String description, boolean isDone) {
-        this.type = type;
-        this.description = description;
-        this.isDone = isDone;
-    }
-
-    /**
      * Returns a string representing the completion status of the task.
      *
      * @return The completion status icon ("X" if done, " " if not done).
@@ -73,24 +60,6 @@ public abstract class Task {
      */
     public String getDescription() {
         return description;
-    }
-
-    /**
-     * Returns the completion status of the task.
-     *
-     * @return True if the task is done, false otherwise.
-     */
-    public boolean getIsDone() {
-        return isDone;
-    }
-
-    /**
-     * Sets the completion status of the task.
-     *
-     * @param isDone The completion status to set (true if done, false otherwise).
-     */
-    public void setIsDone(boolean isDone) {
-        this.isDone = isDone;
     }
 
     /**
